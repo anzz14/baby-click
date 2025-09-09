@@ -63,7 +63,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-soft-yellow via-sky-blue to-bright-pink p-4">
+    <div className="min-h-screen bg-gradient-to-br from-pink-200 via-purple-200 to-blue-200 p-4">
       {/* Header Section */}
       <motion.header 
         className="text-center py-8"

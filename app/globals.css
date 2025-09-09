@@ -2,12 +2,12 @@
 @import "tailwindcss";
 
 :root {
-  --background: #FFF7D1;
-  --foreground: #4A148C;
+  --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --foreground: #FFFFFF;
   --primary-pink: #FF6FB5;
   --primary-blue: #6ECFFF;
   --accent-green: #8BD450;
-  --text-purple: #4A148C;
+  --text-purple: #FFFFFF;
 }
 
 @theme inline {
@@ -30,8 +30,10 @@
 
 body {
   color: theme(colors.foreground);
-  background: theme(colors.background);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-attachment: fixed;
   font-feature-settings: "rlig" 1, "calt" 1;
+  min-height: 100vh;
 }
 
 .font-comic {

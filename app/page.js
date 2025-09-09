@@ -1,103 +1,184 @@
-import Image from "next/image";
+'use client'
 
-export default function Home() {
+import { useState } from 'react'
+import { motion } from 'framer-motion'
+import { cartoons, getRandomEpisode } from '../data/cartoons'
+import Image from 'next/image'
+
+export default function HomePage() {
+  const [clickedCard, setClickedCard] = useState(null)
+
+  const handleCartoonClick = (cartoon) => {
+    // Set clicked state for animation
+    setClickedCard(cartoon.id)
+    
+    // Get random episode
+    const randomEpisode = getRandomEpisode(cartoon.episodes)
+    
+    // Open YouTube in new tab
+    window.open(randomEpisode, '_blank', 'noopener,noreferrer')
+    
+    // Reset clicked state after animation
+    setTimeout(() => {
+      setClickedCard(null)
+    }, 600)
+  }
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        delayChildren: 0.3,
+        staggerChildren: 0.2
+      }
+    }
+  }
+
+  const cardVariants = {
+    hidden: { y: 50, opacity: 0, scale: 0.8 },
+    visible: { 
+      y: 0, 
+      opacity: 1, 
+      scale: 1,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut"
+      }
+    },
+    hover: { 
+      scale: 1.05,
+      y: -10,
+      transition: {
+        duration: 0.3,
+        ease: "easeInOut"
+      }
+    },
+    tap: { 
+      scale: 0.95,
+      transition: {
+        duration: 0.2
+      }
+    }
+  }
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="min-h-screen bg-gradient-to-br from-soft-yellow via-sky-blue to-bright-pink p-4">
+      {/* Header Section */}
+      <motion.header 
+        className="text-center py-8"
+        initial={{ opacity: 0, y: -50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
+        <motion.h1 
+          className="text-4xl md:text-6xl lg:text-7xl font-comic text-dark-purple mb-4"
+          style={{
+            textShadow: '4px 4px 0px #FF6FB5, 8px 8px 0px #6ECFFF'
+          }}
+        >
+          Baby Click
+        </motion.h1>
+        <motion.p 
+          className="text-lg md:text-2xl text-dark-purple font-comic font-medium"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5, duration: 0.6 }}
+        >
+          Click your favorite cartoon and watch random episodes!
+        </motion.p>
+      </motion.header>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      {/* Cartoons Grid */}
+      <motion.div
+        className="max-w-6xl mx-auto"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+          {cartoons.map((cartoon) => (
+            <motion.div
+              key={cartoon.id}
+              className="relative group"
+              variants={cardVariants}
+              whileHover="hover"
+              whileTap="tap"
+            >
+              <motion.div
+                className={`
+                  bg-white rounded-3xl shadow-lg p-6 text-center cursor-pointer
+                  border-4 border-bright-pink hover:border-success-green
+                  transform transition-all duration-300 touch-target
+                  ${clickedCard === cartoon.id ? 'ring-4 ring-success-green ring-opacity-50' : ''}
+                `}
+                onClick={() => handleCartoonClick(cartoon)}
+              >
+                {/* Character Image */}
+                <motion.div 
+                  className="relative mb-4 mx-auto w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48"
+                  whileHover={{ rotate: 10, scale: 1.1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  
+                  <Image
+                    src={cartoon.image}
+                    alt={cartoon.name}
+                    fill
+                    className={`object-contain rounded-2xl ${
+                      cartoon.id === 1 ? 'scale-150 ' : 
+                      cartoon.id === 2 ? 'scale-150' : 
+                      cartoon.id === 3 ? '' : 
+                      cartoon.id === 4 ? 'scale-125' : 
+                      cartoon.id === 5 ? 'scale-150' : 
+                      cartoon.id === 6 ? 'scale-150' : 
+                      cartoon.id === 7 ? 'scale-130' : 
+                      cartoon.id === 8 ? 'scale-150' : 
+                      cartoon.id === 9 ? 'scale-125' : 
+                      cartoon.id === 10 ? 'scale-125' : ''
+                    }`}
+                    sizes="(max-width: 768px) 128px, (max-width: 1024px) 160px, 192px"
+                    priority
+                  />
+                </motion.div>
+
+                {/* Character Name */}
+                <motion.h3 
+                  className="text-xl md:text-2xl lg:text-3xl font-comic text-dark-purple font-bold mb-3"
+                  whileHover={{ scale: 1.1 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {cartoon.name}
+                </motion.h3>
+
+                {/* Click Hint */}
+                <motion.div
+                  className="text-sm md:text-base text-dark-purple opacity-70 font-medium"
+                  initial={{ opacity: 0.7 }}
+                  whileHover={{ opacity: 1, scale: 1.05 }}
+                >
+                  Click to watch!
+                </motion.div>
+              </motion.div>
+            </motion.div>
+          ))}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+      </motion.div>
+
+      {/* Footer */}
+      <motion.footer 
+        className="text-center py-8 mt-12"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1, duration: 0.6 }}
+      >
+        <motion.p 
+          className="text-dark-purple font-comic text-lg md:text-xl"
+          whileHover={{ scale: 1.05 }}
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          Made with love for little ones!
+        </motion.p>
+      </motion.footer>
     </div>
-  );
+  )
 }

@@ -77,7 +77,7 @@ export default function HomePage() {
           {/* Attribution */}
           <div className="mt-12 pt-8">
             <p className="text-lg md:text-xl text-dark-purple opacity-70 font-comic">
-              An initiative by Amrita Rath
+              An initiative by Dr Amrita Rath
             </p>
           </div>
         </div>

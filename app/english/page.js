@@ -205,7 +205,7 @@ export default function HomePage() {
           className="text-dark-purple font-comic text-lg md:text-xl"
           whileHover={{ scale: 1.05 }}
         >
-            An intitiative by Amrita Rath
+          An intitiative by Dr Amrita Rath
         </motion.p>
       </motion.footer>
     </div>
